@@ -144,7 +144,7 @@ R=g.R;sol=g.s;const pal=shuf(COL.slice());
 C=Array(n).fill(-1);M=new Uint8Array(n*n);lives=3;sec=0;err=0;over=0;cr=cc=0;G=1;snap=null;lc=-1;
 const b=$("#board");b.style.setProperty("--n",n);b.classList.remove("busy");$("#toast").classList.remove("on");
 b.innerHTML=R.map((row,r)=>row.map((g,c)=>`<div class="cell" data-r="${r}" data-c="${c}" data-g="${g+1}" style="--rc:${pal[g]}" role="gridcell" aria-label="Fila ${r+1}, columna ${c+1}"><i class="pc"></i></div>`).join("")).join("");
-nm();$("#win").hidden=true;hud();save()}
+nm();fit();$("#win").hidden=true;hud();save()}
 function hud(){$("#cnt").textContent=C.filter(x=>x>=0).length+"/"+n;
 $("#hp").innerHTML=[0,1,2].map(i=>`<svg class="hr${i<lives?"":" x"}"><use href="#ht"/></svg>`).join("");$("#tm").textContent=fm(sec);
 [...$("#board").children].forEach((e,i)=>{const r=i/n|0,c=i%n;e.classList.toggle("cat",C[r]==c);e.classList.toggle("x",!!M[i]);e.classList.toggle("cur",r==cr&&c==cc)})}
@@ -159,11 +159,10 @@ if(C[r]==c){C[r]=-1;hud();return}
 const w=why(r,c);
 if(w){err++;if(!S.cfg.inf)lives--;const e=$("#board").children[r*n+c];e.classList.remove("bad");void e.offsetWidth;e.classList.add("bad");toast(w);hud();if(!lives)end(0);return}
 C[r]=c;M[r*n+c]=0;hud();if(C.every(x=>x>=0))end(1)}
-function mark(r,c){if(over)return;const i=r*n+c;cr=r;cc=c;
-if(M[i])M[i]=0;else{M[i]=1;if(C[r]==c)C[r]=-1;S.xs++;chk();save()}hud()}
-function press(r,c){const t=performance.now(),i=r*n+c;
-if(i==lc&&t-lt<320&&snap){C=snap.C;M=snap.M;lives=snap.l;err=snap.e;lc=-1;snap=null;mark(r,c);return}
-snap={C:C.slice(),M:M.slice(),l:lives,e:err};lc=i;lt=t;tap(r,c)}
+function cyc(r,c){if(over)return;const i=r*n+c;cr=r;cc=c;
+if(C[r]==c){C[r]=-1;hud();return}
+if(M[i]){tap(r,c);return}
+M[i]=1;S.xs++;chk();save();hud()}
 function end(ok){over=1;const g=gs();g.p++;let nb=0;
 if(ok){g.w++;g.st++;g.bs=Math.max(g.bs,g.st);S.coins+=10;S.earned+=10;S.ch++;if(!err)S.fl++;if(!g.best[n]||sec<g.best[n]){g.best[n]=sec;nb=1}}else g.st=0;
 S.last={n,s:sec,ok};S.dot=1;chk();save();ui();if(V=="stats")stx();
@@ -179,7 +178,7 @@ function act(k,pad){if(!S.tag)return;document.body.classList.add("kb");
 if(!$("#win").hidden){if(k=="A")newG();else if(k=="B")go("home");return}
 if(V!="play"){if(!pad)return;const i=N.findIndex(x=>x[0]==V);if(k=="L")go(N[(i+4)%5][0]);else if(k=="R")go(N[(i+1)%5][0]);else if(k=="A"&&V!="set")go("play");return}
 if(k=="u")cr=(cr+n-1)%n;else if(k=="d")cr=(cr+1)%n;else if(k=="l")cc=(cc+n-1)%n;else if(k=="r")cc=(cc+1)%n;
-else if(k=="A")return tap(cr,cc);else if(k=="X")return mark(cr,cc);else if(k=="Y")return hint();else if(k=="N")return newG();else if(k=="B")return go("home");
+else if(k=="A")return cyc(cr,cc);else if(k=="X")return tap(cr,cc);else if(k=="Y")return hint();else if(k=="N")return newG();else if(k=="B")return go("home");
 if(!over)hud()}
 const KM={ArrowUp:"u",ArrowDown:"d",ArrowLeft:"l",ArrowRight:"r",Enter:"A"," ":"A",Escape:"B",x:"X",h:"Y",n:"N",w:"u",s:"d",a:"l",d:"r"};
 addEventListener("keydown",e=>{if(e.target.matches("input")||e.ctrlKey||e.metaKey||e.altKey)return;const k=KM[e.key];
@@ -200,8 +199,18 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-v]"),by=e.
 if(by)buy(by.dataset.buy);else if(eq)equip(eq.dataset.eq);
 else if(b&&!b.closest(".pv"))go(b.dataset.v);else if(e.target.closest("[data-soon]"))toast("Próximamente, vuelve pronto");
 if(e.target.closest(".ac .btn"))e.target.closest("button").blur()});
-$("#board").onclick=e=>{const c=e.target.closest(".cell");if(c)press(+c.dataset.r,+c.dataset.c)};
-$("#board").oncontextmenu=e=>{e.preventDefault();const c=e.target.closest(".cell");if(c)mark(+c.dataset.r,+c.dataset.c)};
+let dr=null;
+const cellAt=(x,y)=>{const e=document.elementFromPoint(x,y);return e&&e.closest?e.closest(".cell"):null};
+function paint(r,c){const i=r*n+c;if(C[r]==c)return;if(dr.m=="x"&&!M[i]){M[i]=1;S.xs++}else if(dr.m=="e")M[i]=0;cr=r;cc=c;hud()}
+$("#board").onpointerdown=e=>{if(e.button||over)return;const c=e.target.closest(".cell");if(!c)return;const r=+c.dataset.r,k=+c.dataset.c;
+dr={r,k,m:M[r*n+k]?"e":C[r]==k?"":"x",mv:0,l:r*n+k}};
+$("#board").onpointermove=e=>{if(!dr||!dr.m)return;const c=cellAt(e.clientX,e.clientY);if(!c)return;const r=+c.dataset.r,k=+c.dataset.c,i=r*n+k;if(i==dr.l)return;
+if(!dr.mv){dr.mv=1;paint(dr.r,dr.k)}dr.l=i;paint(r,k)};
+addEventListener("pointerup",()=>{if(!dr)return;const d=dr;dr=null;if(d.mv){chk();save()}else cyc(d.r,d.k)});
+addEventListener("pointercancel",()=>{dr=null});
+$("#board").oncontextmenu=e=>{e.preventDefault();const c=e.target.closest(".cell");if(c)tap(+c.dataset.r,+c.dataset.c)};
+const fit=()=>{const b=$(".bd");$("#board").classList.toggle("fit",b.scrollWidth<=b.clientWidth+1)};
+addEventListener("resize",fit);
 $("#sz").onclick=e=>{const b=e.target.closest("button");if(b)newG(+b.dataset.n)};
 $("#nw").onclick=()=>newG();$("#again").onclick=()=>newG();$("#ht").onclick=hint;
 $("#un").onclick=()=>{C.fill(-1);M.fill(0);lives=3;sec=0;err=0;over=0;hud()};

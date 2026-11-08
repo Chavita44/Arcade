@@ -7,13 +7,13 @@ Arcade web hecha con HTML, CSS y JavaScript puro (sin dependencias ni build). In
 - Un logo por fila y por columna.
 - Un logo por zona de color.
 - Los logos no pueden tocarse, ni en diagonal.
-- Toca una casilla vacía para poner un logo y tócala otra vez para quitarlo.
+- Toca una casilla para marcarla con X, vuelve a tocarla para poner el logo y otra vez para quitarlo.
 
 Tiene 3 vidas (o modo relajado sin vidas), pistas, cronómetro, récords por tamaño (6×6, 8×8, 10×10) y tableros generados al azar.
 
 ## Novedades
 
-- **Doble toque / doble clic** sobre una casilla pone una **X** para tacharla (también clic derecho, mantener pulsado, tecla `X` o botón `X` del mando).
+- **Marcar con X:** un toque o clic pone una **X**, otro toque sobre la X pone el **logo**, y otro lo quita. Si **deslizas** el dedo o el ratón sobre casillas vacías, se tachan todas con X (si empiezas sobre una X, las destacha). Clic derecho o mantener pulsado pone el logo directo.
 - **Tableros de 6×6 hasta 20×20.** Hasta 10×10 la solución es única; en 12×12 y más se intenta que lo sea, pero algunos tableros pueden tener más de una solución válida (cualquiera gana). Los grandes pueden tardar unos segundos en generarse.
 - **Gamer tag** que se elige una sola vez al entrar. Nivel de cuenta fijo en 1 por ahora.
 - **Estadísticas** por juego: tiempo, victorias, racha, récords por tamaño.
@@ -25,9 +25,9 @@ Tiene 3 vidas (o modo relajado sin vidas), pistas, cronómetro, récords por tam
 
 | Dispositivo | Cómo se juega |
 |---|---|
-| Móvil / tablet / pantalla táctil | Tocar las casillas |
-| PC | Ratón, o flechas (o WASD) + Enter/Espacio. `X` tachar, `H` pista, `N` nuevo, `Esc` salir |
-| Mando / consola | Cruceta o stick para mover, `A` logo, `X` tachar, `Y` pista, `Start` nuevo, `B` salir, `LB`/`RB` cambiar de sección |
+| Móvil / tablet / pantalla táctil | Tocar: X, luego logo, luego vacío. Deslizar para tachar varias |
+| PC | Clic igual que en móvil, o flechas (o WASD) + Enter. `X` logo directo, `H` pista, `N` nuevo, `Esc` salir |
+| Mando / consola | Cruceta o stick para mover, `A` marcar (X, logo, vacío), `X` logo directo, `Y` pista, `Start` nuevo, `B` salir, `LB`/`RB` cambiar de sección |
 
 ## Probar en local
 
