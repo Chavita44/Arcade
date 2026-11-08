@@ -1,23 +1,33 @@
 # Chavita33_Arcade
 
-Arcade web hecha con HTML, CSS y JavaScript puro (sin dependencias ni build). Incluye **Gatodoku**, un puzzle de gatos estilo sudoku, y funciona en PC, móvil y consolas.
+Arcade web hecha con HTML, CSS y JavaScript puro (sin dependencias ni build). Incluye **Logodoku**, un puzzle estilo sudoku donde buscas el logo de la página, y funciona en PC, móvil y consolas.
 
-## Gatodoku: reglas
+## Logodoku: reglas
 
-- Un gato por fila y por columna.
-- Un gato por zona de color.
-- Los gatos no pueden tocarse, ni en diagonal.
-- Toca una casilla vacía para poner un gato y tócala otra vez para quitarlo.
+- Un logo por fila y por columna.
+- Un logo por zona de color.
+- Los logos no pueden tocarse, ni en diagonal.
+- Toca una casilla vacía para poner un logo y tócala otra vez para quitarlo.
 
-Tiene 3 vidas (o modo relajado sin vidas), pistas, cronómetro, récords por tamaño (6×6, 8×8, 10×10) y tableros generados al azar con solución única cuando es posible.
+Tiene 3 vidas (o modo relajado sin vidas), pistas, cronómetro, récords por tamaño (6×6, 8×8, 10×10) y tableros generados al azar.
+
+## Novedades
+
+- **Doble toque / doble clic** sobre una casilla pone una **X** para tacharla (también clic derecho, mantener pulsado, tecla `X` o botón `X` del mando).
+- **Tableros de 6×6 hasta 20×20.** Hasta 10×10 la solución es única; en 12×12 y más se intenta que lo sea, pero algunos tableros pueden tener más de una solución válida (cualquiera gana). Los grandes pueden tardar unos segundos en generarse.
+- **Gamer tag** que se elige una sola vez al entrar. Nivel de cuenta fijo en 1 por ahora.
+- **Estadísticas** por juego: tiempo, victorias, racha, récords por tamaño.
+- **Trofeos y logros** (100 horas, 25/100/500/1000 victorias y 13 logros más).
+- **Monedas y cofres:** cada victoria da 10 monedas.
+- **Tienda de aspectos:** cambia el logo por animales y objetos. El más caro (10.000 monedas) es el logo arcoíris.
 
 ## Controles
 
 | Dispositivo | Cómo se juega |
 |---|---|
 | Móvil / tablet / pantalla táctil | Tocar las casillas |
-| PC | Ratón, o flechas (o WASD) + Enter/Espacio. `H` pista, `N` nuevo, `Esc` salir |
-| Mando / consola | Cruceta o stick para mover, `A` gato, `X` pista, `Y` nuevo, `B` salir, `LB`/`RB` cambiar de sección |
+| PC | Ratón, o flechas (o WASD) + Enter/Espacio. `X` tachar, `H` pista, `N` nuevo, `Esc` salir |
+| Mando / consola | Cruceta o stick para mover, `A` logo, `X` tachar, `Y` pista, `Start` nuevo, `B` salir, `LB`/`RB` cambiar de sección |
 
 ## Probar en local
 
@@ -40,7 +50,7 @@ python3 -m http.server 8000
 ```
 index.html      Estructura de la página
 css/style.css   Estilos y colores (variables al inicio del archivo)
-js/app.js       Navegación, lógica de Gatodoku, teclado y mando
+js/app.js       Navegación, lógica de Logodoku, teclado y mando
 assets/logo.png Logotipo
 ```
 
